@@ -2,7 +2,8 @@
 
 GemDating is a library for determining the relative age of a set of gems.
 
-The primary use case is when evaluating a codebase for upgrades - a gem from 2017 may effectively be abandoned and could cause trouble if you're targeting an upgrade to Ruby 4.1
+The primary use case is when evaluating a codebase for upgrades - a gem from 2017 may effectively be abandoned and could
+cause trouble if you're targeting an upgrade to Ruby 4.1
 
 ## Usage
 
@@ -15,7 +16,27 @@ gem 'gem_dating', group: [:development]
 ```
 
 ### Running GemDating
-TODO:  much explaining
+
+This gem provides a *very* limited command line interface. It may be invoked with:
+
+```bash
+$ gem_dating [path/to/Gemfile]
+```
+
+Given a path to a Gemfile, GemDating will output a list of gems and their relative ages to the stdout stream.
+
+For example:
+
+```bash
+$ gem_dating ~/code/my_app/Gemfile
+``` 
+to read the output in your terminal.
+
+Or you can run
+```bash
+$ gem_dating ~/code/my_app/Gemfile > ~/code/my_app/gem_ages.txt
+```
+which will pipe the output into a text file. 
 
 
 ## Code of Conduct
