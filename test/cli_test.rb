@@ -60,15 +60,8 @@ class GemDating::CliTest < Minitest::Test
   end
 
   def test_bad_filepath
-    exit_code = nil
-
     assert_raises Errno::ENOENT do
-      _stdout, stderr = capture_io do
-        exit_code = GemDating::Cli.new(["test/Gemfile.nope"]).run
-      end
-
-      assert_equal exit_code, 2
-      assert_includes stderr, "No such file or directory @ rb_sysopen - test/bad_file.txt\n"
+      GemDating::Cli.new(["test/Gemfile.nope"]).run
     end
   end
 end
