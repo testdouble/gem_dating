@@ -20,17 +20,6 @@ class GemDating::CliTest < Minitest::Test
     end
   end
 
-  def test_bad_filepath
-    exit_code = nil
-
-    _stdout, stderr = capture_subprocess_io do
-      exit_code = system("ruby exe/gem_dating test/bad_file.txt")
-    end
-
-    assert_equal exit_code, false
-    assert_includes stderr, "No such file or directory @ rb_sysopen - test/bad_file.txt\n"
-  end
-
   def test_gemfile
     exit_code = nil
 
@@ -52,5 +41,34 @@ class GemDating::CliTest < Minitest::Test
 
     assert_equal 0, exit_code
     assert_equal expected_out, stdout
+  end
+
+  def test_no_args_prints_help
+    exit_code = nil
+
+    stdout, _stderr = capture_io do
+      exit_code = GemDating::Cli.new([]).run
+    end
+
+    expected_out =
+      <<~EXPECTED
+        Usage: gem_dating [GEMFILE_FILEPATH]
+      EXPECTED
+
+    assert_equal 1, exit_code
+    assert_equal expected_out, stdout
+  end
+
+  def test_bad_filepath
+    exit_code = nil
+
+    assert_raises Errno::ENOENT do
+      _stdout, stderr = capture_io do
+        exit_code = GemDating::Cli.new(["test/Gemfile.nope"]).run
+      end
+
+      assert_equal exit_code, 2
+      assert_includes stderr, "No such file or directory @ rb_sysopen - test/bad_file.txt\n"
+    end
   end
 end
