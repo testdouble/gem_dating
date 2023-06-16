@@ -2,6 +2,7 @@ require "gem_dating/version"
 require_relative "gem_dating/input"
 require_relative "gem_dating/rubygems"
 require_relative "gem_dating/result"
+require_relative "gem_dating/cli"
 
 module GemDating
   def self.from_string(s)
