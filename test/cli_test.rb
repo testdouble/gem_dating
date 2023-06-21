@@ -4,18 +4,18 @@ require "date"
 class GemDating::CliTest < Minitest::Test
   def setup
     @spec1 = Gem::Specification.new do |s|
-      s.name = "rest-client"
-      s.version = "2.1.0"
-      s.date = DateTime.parse("2019-08-21")
+      s.name = "banana-client"
+      s.version = "21.1.0"
+      s.date = DateTime.parse("1990-08-21")
     end
     @spec2 = Gem::Specification.new do |s|
-      s.name = "rails"
-      s.version = "7.0.5"
-      s.date = DateTime.parse("2023-05-24")
+      s.name = "rails-on-rubies"
+      s.version = "70.0.5"
+      s.date = DateTime.parse("2123-05-24")
     end
     @spec3 = Gem::Specification.new do |s|
-      s.name = "graphql"
-      s.version = "2.0.22"
+      s.name = "giraffeql"
+      s.version = "0.0.2227"
       s.date = DateTime.parse("2023-05-17")
     end
   end
@@ -34,9 +34,9 @@ class GemDating::CliTest < Minitest::Test
     expected_out = <<~EXPECTED
       NAME        | VERSION | DATE      
       ------------|---------|-----------
-      rest-client | 2.1.0   | 2019-08-21
-      rails       | 7.0.5   | 2023-05-24
-      graphql     | 2.0.22  | 2023-05-17
+      banana-client | 21.1.0   | 1990-08-21
+      rails-on-rubies       | 70.0.5   | 2123-05-24
+      giraffeql     | 0.0.2227  | 2023-05-17
     EXPECTED
 
     assert_equal 0, exit_code
