@@ -23,20 +23,19 @@ class GemDating::CliTest < Minitest::Test
   def test_gemfile
     exit_code = nil
 
-    rubygems = Mocktail.of(GemDating::Rubygems)
-
-    stubs { |m| rubygems.fetch(m.is_a?(Array)) }.with { [@spec1, @spec2, @spec3] }
+    Mocktail.replace(GemDating::Rubygems)
+    stubs { |m| GemDating::Rubygems.fetch(m.is_a(Array)) }.with { [@spec1, @spec2, @spec3] }
 
     stdout, _stderr = capture_io do
       exit_code = GemDating::Cli.new(["test/Gemfile.example"]).run
     end
 
     expected_out = <<~EXPECTED
-      NAME        | VERSION | DATE      
-      ------------|---------|-----------
-      banana-client | 21.1.0   | 1990-08-21
-      rails-on-rubies       | 70.0.5   | 2123-05-24
-      giraffeql     | 0.0.2227  | 2023-05-17
+      NAME            | VERSION  | DATE      
+      ----------------|----------|-----------
+      banana-client   | 21.1.0   | 1990-08-21
+      rails-on-rubies | 70.0.5   | 2123-05-24
+      giraffeql       | 0.0.2227 | 2023-05-17
     EXPECTED
 
     assert_equal 0, exit_code
@@ -53,7 +52,7 @@ class GemDating::CliTest < Minitest::Test
     expected_out =
       <<~EXPECTED
         Usage: gem_dating [GEMFILE_FILEPATH]
-      EXPECTED
+    EXPECTED
 
     assert_equal 1, exit_code
     assert_equal expected_out, stdout
