@@ -3,7 +3,6 @@ PATH
   specs:
     gem_dating (0.1.0)
       bundler
-      ruby-limiter
       table_print
 
 GEM
@@ -41,7 +40,6 @@ GEM
     rubocop-performance (1.16.0)
       rubocop (>= 1.7.0, < 2.0)
       rubocop-ast (>= 0.4.0)
-    ruby-limiter (2.2.2)
     ruby-progressbar (1.13.0)
     standard (1.28.2)
       language_server-protocol (~> 3.17.0.2)

@@ -6,7 +6,7 @@ require "gem_dating/version"
 Gem::Specification.new do |spec|
   spec.name          = "gem_dating"
   spec.version       = GemDating::VERSION
-  spec.authors       = ["Steve Jackson"]
+  spec.authors       = ["Steve Jackson", "Daniel Huss"]
   spec.email         = ["steve@testdouble.com"]
 
   spec.summary       = "How old is that anyway?"
@@ -26,5 +26,4 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency "bundler"
   spec.add_dependency "table_print"
-  spec.add_dependency "ruby-limiter"
 end
