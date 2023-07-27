@@ -51,4 +51,15 @@ class TestInput < Minitest::Test
     gems = GemDating::Input.new(pasteboard).gems
     assert_equal ["rails", "sqlite3"], gems
   end
+
+  def test_hash_alone_causes_confusion
+    pasteboard = <<-TEXT
+      # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
+      gem "tzinfo-data", platforms: [:mingw, :mswin, :x64_mingw, :jruby]
+      #
+      gem "bcrypt", "~> 3.1"
+    TEXT
+    gems = GemDating::Input.new(pasteboard).gems
+    assert_equal ["tzinfo-data", "bcrypt"], gems
+  end
 end
