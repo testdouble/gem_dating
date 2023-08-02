@@ -62,4 +62,18 @@ class TestInput < Minitest::Test
     gems = GemDating::Input.new(pasteboard).gems
     assert_equal ["tzinfo-data", "bcrypt"], gems
   end
+
+  def test_conditional_versioning
+    pasteboard = <<-TEXT
+      if rails_edge?
+        gem 'rails'
+      elsif rails_next?
+        gem 'rails', '~> 6.2'
+      else
+        gem 'rails', '~> 5.2.8.1'
+      end
+    TEXT
+    gems = GemDating::Input.new(pasteboard).gems
+    assert_equal ["rails"], gems
+  end
 end
