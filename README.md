@@ -12,7 +12,7 @@ cause trouble if you're targeting an upgrade to Ruby 4.1
 `gem install gem_dating` or add it to your Gemfile:
 
 ```ruby
-gem 'gem_dating', group: [:development]
+gem 'gem_dating', group: [:development], require: false
 ```
 
 ### Running GemDating
