@@ -24,6 +24,7 @@ module GemDating
 
     def gem_line(line)
       return if line.strip == "end"
+      return if line =~ /^\s*#/
 
       if line.start_with? "gem("
         line.split("(")[1].split(",")[0]
