@@ -19,18 +19,18 @@ module GemDating
       lines.each_with_object([]) do |line, gems|
         line = gem_line(line.strip)
         gems << cleanup(line) if line
-      end
+      end.uniq
     end
 
     def gem_line(line)
-      return if line.strip == "end"
-      return if line =~ /^\s*#/
+      single_word_ruby_statements = %w{end else #}
+      return if single_word_ruby_statements.include? line.strip
 
       if line.start_with? "gem("
         line.split("(")[1].split(",")[0]
       elsif line.start_with? "gem"
         line.split[1].split(",")[0]
-      elsif line.split.length == 1
+      elsif line.split.length == 1 # match "just" gemname
         line
       end
     end
