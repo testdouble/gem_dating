@@ -7,7 +7,10 @@ cause trouble if you're targeting an upgrade to Ruby 4.1
 
 ## Usage
 
-### Installation
+If you have rubygems 3.4.8 or later installed, you can skip installation and just run via `gem exec gem_dating [[path/to/Gemfile]`
+
+
+### Gem Installation
 
 `gem install gem_dating` or add it to your Gemfile:
 
@@ -25,23 +28,28 @@ $ gem_dating [path/to/Gemfile]
 
 Given a path to a Gemfile, GemDating will output a list of gems and their relative ages to the stdout stream.
 
-For example:
+For example(using gem exec):
+```bash
+$ gem exec gem_dating ~/code/my_app/Gemfile
+```
 
+or (using installed gem):
 ```bash
 $ gem_dating ~/code/my_app/Gemfile
-``` 
-to read the output in your terminal.
+```
+
+to see the output in your terminal.
 
 Or you can run
 ```bash
 $ gem_dating ~/code/my_app/Gemfile > ~/code/my_app/gem_ages.txt
 ```
-which will pipe the output into a text file. 
+which will pipe the output into a text file.
 
 The command line output will look something like this:
 
 ```bash
-NAME        | VERSION | DATE      
+NAME        | VERSION | DATE
 ------------|---------|-----------
 rest-client | 2.1.0   | 2019-08-21
 rails       | 7.0.5   | 2023-05-24
@@ -53,7 +61,7 @@ passing in a string of a gem name, or a path to a Gemfile. You can then parse th
 a minimal hash, or the Table output you'd see in the CLI.
 
 ```ruby
-# irb 
+# irb
 # #:001 >
 
 require "gem_dating"
@@ -64,16 +72,16 @@ more_dating = GemDating.from_file("path/to/Gemfile")
 
 
 dating.to_a
-# => [Gem::Specification.new do |s|                               
+# => [Gem::Specification.new do |s|
 # s.name = "rails"
 # s.version = Gem::Version.new("7.0.5")
 # s.installed_by_version = Gem::Version.new("0") ...etc
 
 dating.to_h
-# =>  {"rails"=>{"name"=>"rails", "version"=>"7.0.5", "date"=>"2023-05-24"}} 
+# =>  {"rails"=>{"name"=>"rails", "version"=>"7.0.5", "date"=>"2023-05-24"}}
 
 more_dating.table_print
-# => 
+# =>
 # NAME        | VERSION | DATE
 # ------------|---------|-----------
 # rails       | 7.0.5   | 2023-05-24
