@@ -1,9 +1,13 @@
 # GemDating
 
-GemDating is a library for determining the relative age of a set of gems.
+`gem_dating` is a library for determining the relative age of a set of gems.
 
-The primary use case is when evaluating a codebase for upgrades - a gem from 2017 may effectively be abandoned and could
-cause trouble if you're targeting an upgrade to Ruby 4.1
+The primary use case is when evaluating a codebase for upgrades - a gem from 2017 may effectively be abandoned and could cause trouble if you're targeting an upgrade to Ruby 4.1
+
+`gem_dating` avoids utilizing Bundler, and intends to be useful where you want to evaluate a set of gems without
+the overhead of a full bundle install. If you've got a valid bundle you should consider the built in
+[bundle-outdated](https://bundler.io/v2.4/man/bundle-outdated.1.html), or other available tools for interacting
+with your Gemfile, like [libyear-bundler](https://github.com/jaredbeck/libyear-bundler).
 
 ## Usage
 
