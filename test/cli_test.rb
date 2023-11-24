@@ -18,13 +18,21 @@ class GemDating::CliTest < Minitest::Test
       s.version = "0.0.2227"
       s.date = DateTime.parse("2023-05-17")
     end
+
+    @tempdir = Dir.mktmpdir("gem_dating_test")
+
+    Mocktail.replace(GemDating::Rubygems)
+    stubs { |m| GemDating::Rubygems.fetch(m.is_a(Array)) }.with { [@spec1, @spec2, @spec3] }
+  end
+
+  def teardown
+    super
+    FileUtils.rm_rf @tempdir
+    Mocktail.reset
   end
 
   def test_gemfile
     exit_code = nil
-
-    Mocktail.replace(GemDating::Rubygems)
-    stubs { |m| GemDating::Rubygems.fetch(m.is_a(Array)) }.with { [@spec1, @spec2, @spec3] }
 
     stdout, _stderr = capture_io do
       exit_code = GemDating::Cli.new(["test/Gemfile.example"]).run
@@ -42,17 +50,42 @@ class GemDating::CliTest < Minitest::Test
     assert_equal expected_out, stdout
   end
 
-  def test_no_args_prints_help
-    exit_code = nil
+  def test_default_to_existing_relative_gemfile
+    FileUtils.copy("test/Gemfile.example", "#{@tempdir}/Gemfile")
 
-    stdout, _stderr = capture_io do
-      exit_code = GemDating::Cli.new([]).run
+    Dir.chdir(@tempdir) do
+      exit_code = nil
+
+      stdout, _stderr = capture_io do
+        exit_code = GemDating::Cli.new.run
+      end
+
+      expected_out = <<~EXPECTED
+      NAME            | VERSION  | DATE      
+      ----------------|----------|-----------
+      banana-client   | 21.1.0   | 1990-08-21
+      rails-on-rubies | 70.0.5   | 2123-05-24
+      giraffeql       | 0.0.2227 | 2023-05-17
+    EXPECTED
+
+      assert_equal 0, exit_code
+      assert_equal expected_out, stdout
     end
+  end
 
-    expected_out = GemDating::Cli::HELP_TEXT
+  def test_no_default_gemfile
+    Dir.chdir(@tempdir) do
+      exit_code = nil
 
-    assert_equal 1, exit_code
-    assert_equal expected_out, stdout
+      stdout, _stderr = capture_io do
+        exit_code = GemDating::Cli.new([]).run
+      end
+
+      expected_out = GemDating::Cli::HELP_TEXT
+
+      assert_equal 1, exit_code
+      assert_equal expected_out, stdout
+    end
   end
 
   def test_bad_filepath

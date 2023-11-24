@@ -5,10 +5,15 @@ module GemDating
 
     HELP_TEXT =
       <<~HELP
-        Usage: gem_dating [--help | -h] [<GEMFILE_FILEPATH>]
+        gem_dating [--help | -h] [<GEMFILE_FILEPATH>]
+
+        GEMFILE_FILEPATH defaults to ./Gemfile if not provided.
+
+        Options:
+          --help, -h  Show this help message
       HELP
 
-    def initialize(argv)
+    def initialize(argv = [])
       args, file_path = argv.partition { |arg| (arg =~ /--\w+/) || (arg =~ /(-[a-z])/) }
 
       @args = args
@@ -22,8 +27,15 @@ module GemDating
       end
 
       unless @file_path
-        $stdout << HELP_TEXT
-        return GENERAL_ERROR
+        current_directory = Dir.pwd
+        file_path = File.join(current_directory, "Gemfile")
+
+        if File.exist?(file_path)
+          @file_path = file_path
+        else
+          $stdout << HELP_TEXT
+          return GENERAL_ERROR
+        end
       end
 
       $stdout << GemDating.from_file(@file_path).table_print << "\n"
