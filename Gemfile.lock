@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    gem_dating (0.1.0)
+    gem_dating (0.1.1)
       bundler
       table_print
 
