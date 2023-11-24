@@ -49,10 +49,7 @@ class GemDating::CliTest < Minitest::Test
       exit_code = GemDating::Cli.new([]).run
     end
 
-    expected_out =
-      <<~EXPECTED
-        Usage: gem_dating [GEMFILE_FILEPATH]
-    EXPECTED
+    expected_out = GemDating::Cli::HELP_TEXT
 
     assert_equal 1, exit_code
     assert_equal expected_out, stdout
@@ -62,5 +59,21 @@ class GemDating::CliTest < Minitest::Test
     assert_raises Errno::ENOENT do
       GemDating::Cli.new(["test/Gemfile.nope"]).run
     end
+  end
+
+  def test_help_option
+    exit_codes = []
+
+    stdout, _stderr = capture_io do
+      ["--help", "-h"].each do |help_option|
+        exit_codes << GemDating::Cli.new([help_option]).run
+      end
+    end
+
+    expected_out = GemDating::Cli::HELP_TEXT
+
+    assert_equal [0], exit_codes.uniq
+    assert_includes expected_out, stdout.split("\n").first
+    assert_includes expected_out, stdout.split("\n").last
   end
 end
