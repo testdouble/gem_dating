@@ -76,4 +76,18 @@ class TestInput < Minitest::Test
     gems = GemDating::Input.new(pasteboard).gems
     assert_equal ["rails"], gems
   end
+
+  def test_gemspec_in_gemfile
+    pasteboard = <<-TEXT
+      source "https://rubygems.org"
+      # Specify your gem's dependencies in gem_dating.gemspec
+      
+      gemspec
+
+      gem "rake"
+    TEXT
+
+    gems = GemDating::Input.new(pasteboard).gems
+    assert_equal ["rake"], gems
+  end
 end
