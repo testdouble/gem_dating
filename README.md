@@ -24,33 +24,27 @@ gem 'gem_dating', group: [:development], require: false
 
 ### Running GemDating
 
-This gem provides a *very* limited command line interface. It may be invoked with:
+This gem provides a small command line interface. It may be invoked with:
 
 ```bash
-$ gem_dating [path/to/Gemfile]
+$ gem_dating
 ```
 
-Given a path to a Gemfile, GemDating will output a list of gems and their relative ages to the stdout stream.
+By default, GemDating will look for a Gemfile in the current directory.
+If it finds one, it will output a list of gems and their relative ages to the stdout stream.
 
-For example(using gem exec):
-```bash
-$ gem exec gem_dating ~/code/my_app/Gemfile
-```
+You may also pass a path to a Gemfile as an argument:
 
-or (using installed gem):
 ```bash
 $ gem_dating ~/code/my_app/Gemfile
-```
+``` 
 
-to see the output in your terminal.
-
-Or you can run
+GemDating leans on `$stdout`, so you can pipe the output to a file if you'd like:
 ```bash
 $ gem_dating ~/code/my_app/Gemfile > ~/code/my_app/gem_ages.txt
 ```
-which will pipe the output into a text file.
 
-The command line output will look something like this:
+[TablePrint](https://github.com/arches/table_print) formats the output to something like this:
 
 ```bash
 NAME        | VERSION | DATE
