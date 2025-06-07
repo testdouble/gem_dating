@@ -22,7 +22,8 @@ class GemDating::CliTest < Minitest::Test
     @tempdir = Dir.mktmpdir("gem_dating_test")
 
     Mocktail.replace(GemDating::Rubygems)
-    stubs { |m| GemDating::Rubygems.fetch(m.is_a(Array)) }.with { [@spec1, @spec2, @spec3] }
+    stubs { |m| GemDating::Rubygems.fetch(m.is_a(Array), nil) }.with { [@spec1, @spec2, @spec3] }
+    stubs { |m| GemDating::Rubygems.fetch(m.is_a(Array), String) }.with { [@spec1, @spec2, @spec3] }
   end
 
   def teardown

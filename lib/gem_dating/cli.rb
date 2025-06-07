@@ -11,6 +11,7 @@ module GemDating
 
         Options:
           --help, -h  Show this help message
+          --older-than=<AGE>    Filter gems updated within the last X (e.g. 2y, 1m, 4w, 10d)
       HELP
 
     def initialize(argv = [])
@@ -18,6 +19,8 @@ module GemDating
 
       @args = args
       @file_path = file_path.first
+      older_than_arg = @args.find { |arg| arg.start_with?("--older-than=") }
+      @older_than = older_than_arg&.split("=")&.last
     end
 
     def run
@@ -38,7 +41,7 @@ module GemDating
         end
       end
 
-      $stdout << GemDating.from_file(@file_path).table_print << "\n"
+      $stdout << GemDating.from_file(@file_path, @older_than).table_print << "\n"
 
       SUCCESS
     end
