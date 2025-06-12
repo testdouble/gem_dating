@@ -26,26 +26,23 @@ module GemDating
     end
 
     private
+
     def cut_off(date)
       return unless date
       curr_date = Date.today
-      case date
-      when /\A(\d+)y\z/
-        number = $1.to_i
-        return curr_date << (12 * number)
 
-      when /\A(\d+)m\z/
-        number = $1.to_i
-        return curr_date << number
+      number = date[0..-2].to_i
+      unit = date[-1]
 
-      when /\A(\d+)w\z/
-        number = $1.to_i
-        return curr_date - (number * 7)
-
-      when /\A(\d+)d\z/
-        number = $1.to_i
-        return curr_date - number
-
+      case unit
+      when "y"
+        curr_date << (12 * number)
+      when "m"
+        curr_date << number
+      when "w"
+        curr_date - (number * 7)
+      when "d"
+        curr_date - number
       else
         raise ArgumentError, "Invalid date format: #{date}"
       end
