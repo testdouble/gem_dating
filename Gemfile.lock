@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    gem_dating (0.1.2)
+    gem_dating (0.1.1)
       bundler
       table_print
 
@@ -57,6 +57,7 @@ GEM
 
 PLATFORMS
   arm64-darwin-22
+  arm64-darwin-23
   arm64-darwin-24
   x86_64-linux
 
