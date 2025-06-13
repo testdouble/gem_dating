@@ -110,4 +110,40 @@ class TestResult < Minitest::Test
     assert_raises(ArgumentError) { @date_result.older_than("abc") }
     assert_raises(ArgumentError) { @date_result.older_than("") }
   end
+
+  def test_sort_by_name_asc
+    result = GemDating::Result.new([@spec1, @spec2])
+    sorted = result.sort(sort_by: "name", order: "asc")
+
+    assert_equal ["hi", "there"], sorted.to_a.map(&:name)
+  end
+
+  def test_sort_by_name_desc
+    result = GemDating::Result.new([@spec1, @spec2])
+    sorted = result.sort(sort_by: "name", order: "desc")
+
+    assert_equal ["there", "hi"], sorted.to_a.map(&:name)
+  end
+
+  def test_sort_by_date_asc
+    result = GemDating::Result.new([@spec1, @spec2])
+    sorted = result.sort(sort_by: "date", order: "asc")
+
+    assert_equal ["there", "hi"], sorted.to_a.map(&:name)
+  end
+
+  def test_sort_by_date_desc
+    result = GemDating::Result.new([@spec1, @spec2])
+    sorted = result.sort(sort_by: "date", order: "desc")
+
+    assert_equal ["hi", "there"], sorted.to_a.map(&:name)
+  end
+
+  def test_sort_defaults
+    result = GemDating::Result.new([@spec2, @spec1])
+    sorted = result.sort
+
+    # Default sort is by name in ascending order
+    assert_equal ["hi", "there"], sorted.to_a.map(&:name)
+  end
 end

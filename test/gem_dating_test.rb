@@ -32,7 +32,8 @@ class GemDatingTest < Minitest::Test
       gem "puma", "~> 5.0"
     TEXT
 
-    rails, _rest = GemDating.from_string(pasteboard).to_a
+    specs = GemDating.from_string(pasteboard).to_a
+    rails = specs.find { |spec| spec.name == "rails" }
 
     assert_equal "rails", rails.name
     assert_operator Gem::Version.new("7.0"), :<=, rails.version

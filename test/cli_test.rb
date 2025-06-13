@@ -42,8 +42,8 @@ class GemDating::CliTest < Minitest::Test
       NAME            | VERSION  | DATE      
       ----------------|----------|-----------
       banana-client   | 21.1.0   | 1990-08-21
-      rails-on-rubies | 70.0.5   | 2123-05-24
       giraffeql       | 0.0.2227 | 2023-05-17
+      rails-on-rubies | 70.0.5   | 2123-05-24
     EXPECTED
 
     assert_equal 0, exit_code
@@ -64,8 +64,8 @@ class GemDating::CliTest < Minitest::Test
         NAME            | VERSION  | DATE      
         ----------------|----------|-----------
         banana-client   | 21.1.0   | 1990-08-21
-        rails-on-rubies | 70.0.5   | 2123-05-24
         giraffeql       | 0.0.2227 | 2023-05-17
+        rails-on-rubies | 70.0.5   | 2123-05-24
       EXPECTED
 
       assert_equal 0, exit_code
@@ -116,5 +116,43 @@ class GemDating::CliTest < Minitest::Test
 
     cli = GemDating::Cli.new([])
     assert_equal({}, cli.send(:parse_args))
+  end
+
+  def test_sort_by_name_asc
+    exit_code = nil
+
+    stdout, _stderr = capture_io do
+      exit_code = GemDating::Cli.new(["test/Gemfile.example", "--sort-by=name", "--order=asc"]).run
+    end
+
+    expected_out = <<~EXPECTED
+      NAME            | VERSION  | DATE      
+      ----------------|----------|-----------
+      banana-client   | 21.1.0   | 1990-08-21
+      giraffeql       | 0.0.2227 | 2023-05-17
+      rails-on-rubies | 70.0.5   | 2123-05-24
+    EXPECTED
+
+    assert_equal 0, exit_code
+    assert_equal expected_out, stdout
+  end
+
+  def test_sort_by_date_desc
+    exit_code = nil
+
+    stdout, _stderr = capture_io do
+      exit_code = GemDating::Cli.new(["test/Gemfile.example", "--sort-by=date", "--order=desc"]).run
+    end
+
+    expected_out = <<~EXPECTED
+      NAME            | VERSION  | DATE      
+      ----------------|----------|-----------
+      rails-on-rubies | 70.0.5   | 2123-05-24
+      giraffeql       | 0.0.2227 | 2023-05-17
+      banana-client   | 21.1.0   | 1990-08-21
+    EXPECTED
+
+    assert_equal 0, exit_code
+    assert_equal expected_out, stdout
   end
 end

@@ -20,6 +20,7 @@ module GemDating
     specs = Rubygems.fetch(gems)
     results = Result.new(specs)
     results.older_than(options[:older_than]) if options[:older_than]
+    results.sort(options)
     results
   end
 
