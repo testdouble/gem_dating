@@ -58,6 +58,22 @@ class TestResult < Minitest::Test
     assert_equal expected, @result.to_h
   end
 
+  def test_json
+    expected = {
+      "hi" => {
+        "name" => "hi",
+        "version" => "42.42",
+        "date" => "2015-09-18"
+      },
+      "there" => {
+        "name" => "there",
+        "version" => "1.27.0.01",
+        "date" => "2009-09-02"
+      }
+    }
+    assert_equal expected, JSON.parse(@result.to_json)
+  end
+
   def test_table
     expected = <<-TEXT
       NAME  | VERSION   | DATE

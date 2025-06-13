@@ -1,4 +1,5 @@
 require "table_print"
+require "json"
 
 module GemDating
   class Result
@@ -23,6 +24,10 @@ module GemDating
 
     def table_print
       TablePrint::Printer.table_print(specs, [:name, :version, {date: {time_format: "%Y-%m-%d", width: 10}}]).encode("utf-8")
+    end
+
+    def to_json
+      JSON.generate(to_h)
     end
 
     def older_than(date)
