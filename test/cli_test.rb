@@ -61,12 +61,12 @@ class GemDating::CliTest < Minitest::Test
       end
 
       expected_out = <<~EXPECTED
-      NAME            | VERSION  | DATE      
-      ----------------|----------|-----------
-      banana-client   | 21.1.0   | 1990-08-21
-      rails-on-rubies | 70.0.5   | 2123-05-24
-      giraffeql       | 0.0.2227 | 2023-05-17
-    EXPECTED
+        NAME            | VERSION  | DATE      
+        ----------------|----------|-----------
+        banana-client   | 21.1.0   | 1990-08-21
+        rails-on-rubies | 70.0.5   | 2123-05-24
+        giraffeql       | 0.0.2227 | 2023-05-17
+      EXPECTED
 
       assert_equal 0, exit_code
       assert_equal expected_out, stdout
@@ -108,5 +108,13 @@ class GemDating::CliTest < Minitest::Test
     assert_equal [0], exit_codes.uniq
     assert_includes expected_out, stdout.split("\n").first
     assert_includes expected_out, stdout.split("\n").last
+  end
+
+  def test_parse_args
+    cli = GemDating::Cli.new(["--help", "--older-than=2y"])
+    assert_equal({ help: true, older_than: "2y" }, cli.send(:parse_args))
+
+    cli = GemDating::Cli.new([])
+    assert_equal({}, cli.send(:parse_args))
   end
 end

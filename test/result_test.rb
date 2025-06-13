@@ -2,6 +2,15 @@ require "test_helper"
 require "date"
 
 class TestResult < Minitest::Test
+
+  def build_mock_spec(name:, version:, date:)
+    spec = Gem::Specification.new
+    spec.name = name
+    spec.version = Gem::Version.new(version)
+    spec.date = date
+    spec
+  end
+
   def setup
     @spec1 = Gem::Specification.new do |s|
       s.name = "hi"
@@ -14,6 +23,18 @@ class TestResult < Minitest::Test
       s.date = DateTime.parse("2009-09-02")
     end
     @result = GemDating::Result.new([@spec1, @spec2])
+
+    today = Date.today
+
+    @recent_gem = build_mock_spec(name: "recent", version: "1.0", date: today - 10)
+    @months_old_gem = build_mock_spec(name: "months_old", version: "1.0", date: today << 2)
+    @year_old_gem = build_mock_spec(name: "year_old", version: "1.0", date: today - 400)
+
+    @date_result = GemDating::Result.new([
+      @recent_gem,
+      @months_old_gem,
+      @year_old_gem
+    ])
   end
 
   def test_specs
@@ -50,5 +71,43 @@ class TestResult < Minitest::Test
     expected.split.each_with_index do |line, index|
       assert_equal line.strip, table.split[index].strip
     end
+  end
+
+  def test_cut_off_parsing_years
+    @date_result.older_than("1y")
+
+    assert_equal @date_result.specs.include?(@year_old_gem), true
+    assert_equal @date_result.specs.include?(@months_old_gem), false
+    assert_equal @date_result.specs.include?(@recent_gem), false
+  end
+
+  def test_cut_off_parsing_months
+    @date_result.older_than("1m")
+
+    assert_equal @date_result.specs.include?(@year_old_gem), true
+    assert_equal @date_result.specs.include?(@months_old_gem), true
+    assert_equal @date_result.specs.include?(@recent_gem), false
+  end
+
+  def test_cut_off_parsing_weeks
+    @date_result.older_than("3w")
+
+    assert_equal @date_result.specs.include?(@year_old_gem), true
+    assert_equal @date_result.specs.include?(@months_old_gem), true
+    assert_equal @date_result.specs.include?(@recent_gem), false
+  end
+
+  def test_cut_off_parsing_days
+    @date_result.older_than("7d")
+
+    assert_equal @date_result.specs.include?(@year_old_gem), true
+    assert_equal @date_result.specs.include?(@months_old_gem), true
+    assert_equal @date_result.specs.include?(@recent_gem), true
+  end
+
+  def test_cut_off_invalid_format_raises
+    assert_raises(ArgumentError) { @date_result.older_than("5x") }
+    assert_raises(ArgumentError) { @date_result.older_than("abc") }
+    assert_raises(ArgumentError) { @date_result.older_than("") }
   end
 end
