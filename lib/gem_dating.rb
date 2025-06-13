@@ -5,15 +5,23 @@ require_relative "gem_dating/result"
 require_relative "gem_dating/cli"
 
 module GemDating
-  def self.from_string(s, older_than=nil)
+  def self.from_string(s, options = {})
     gems = Input.string(s).gems
-    specs = Rubygems.fetch(gems, older_than)
-    Result.new(specs)
+    fetch_specs(gems, options)
   end
 
-  def self.from_file(path, older_than=nil)
+  def self.from_file(path, options = {})
     gems = Input.file(path).gems
-    specs = Rubygems.fetch(gems, older_than)
-    Result.new(specs)
+    fetch_specs(gems, options)
   end
+
+
+  def self.fetch_specs(gems, options)
+    specs = Rubygems.fetch(gems)
+    results = Result.new(specs)
+    results.older_than(options[:older_than]) if options[:older_than]
+    results
+  end
+
+  private_class_method :fetch_specs
 end

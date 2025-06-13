@@ -10,8 +10,8 @@ module GemDating
         GEMFILE_FILEPATH defaults to ./Gemfile if not provided.
 
         Options:
-          --help, -h  Show this help message
-          --older-than=<AGE>    Filter gems updated within the last X (e.g. 2y, 1m, 4w, 10d)
+          --help, -h, -?  Show this help message
+          --older-than=<AGE>, --ot=<AGE>    Filter gems updated within the last X (e.g. 2y, 1m, 4w, 10d)
       HELP
 
     def initialize(argv = [])
@@ -19,12 +19,11 @@ module GemDating
 
       @args = args
       @file_path = file_path.first
-      older_than_arg = @args.find { |arg| arg.start_with?("--older-than=") }
-      @older_than = older_than_arg&.split("=")&.last
+      @options = parse_args
     end
 
     def run
-      if (@args & ['-h', '--help']).any?
+      if @options[:help]
         $stdout << HELP_TEXT
         return SUCCESS
       end
@@ -41,9 +40,20 @@ module GemDating
         end
       end
 
-      $stdout << GemDating.from_file(@file_path, @older_than).table_print << "\n"
+      $stdout << GemDating.from_file(@file_path, @options).table_print << "\n"
 
       SUCCESS
+    end
+
+    private
+
+    def parse_args(args = @args)
+      options = {}
+      options[:help] = true if (args & %w[-h --help -?]).any?
+      if (older_than = args.find { |arg| arg.start_with?("--older-than=", "--ot=") })
+        options[:older_than] = older_than.split("=").last
+      end
+      options
     end
   end
 end
