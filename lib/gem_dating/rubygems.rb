@@ -1,5 +1,3 @@
-require 'date'
-
 module GemDating
   class Rubygems
     def self.fetch(...)
