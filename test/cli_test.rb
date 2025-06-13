@@ -112,10 +112,10 @@ class GemDating::CliTest < Minitest::Test
 
   def test_parse_args
     cli = GemDating::Cli.new(["--help", "--older-than=2y"])
-    assert_equal({ help: true, older_than: "2y" }, cli.send(:parse_args))
+    assert_equal({help: true, older_than: "2y"}, cli.send(:parse_args))
 
     cli = GemDating::Cli.new(["--json"])
-    assert_equal({ json: true }, cli.send(:parse_args))
+    assert_equal({json: true}, cli.send(:parse_args))
 
     cli = GemDating::Cli.new([])
     assert_equal({}, cli.send(:parse_args))
