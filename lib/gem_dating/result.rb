@@ -1,4 +1,5 @@
 require "table_print"
+require "json"
 
 module GemDating
   class Result
@@ -25,8 +26,33 @@ module GemDating
       TablePrint::Printer.table_print(specs, [:name, :version, {date: {time_format: "%Y-%m-%d", width: 10}}]).encode("utf-8")
     end
 
+    def to_json
+      JSON.generate(to_h)
+    end
+
     def older_than(date)
       specs.select! { |spec| spec.date.to_date < self.cut_off(date) }
+      self
+    end
+
+    def sort(options = {})
+      field = options[:sort_by] || "name"
+      direction = options[:order] || "asc"
+
+      @specs = @specs.sort_by do |spec|
+        case field
+        when "name"
+          spec.name.downcase
+        when "date"
+          spec.date
+        else
+          spec.name.downcase
+        end
+      end
+
+      @specs = @specs.reverse if direction.downcase == "desc"
+
+      self
     end
 
     private

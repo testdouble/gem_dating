@@ -12,6 +12,9 @@ module GemDating
         Options:
           --help, -h, -?  Show this help message
           --older-than=<AGE>, --ot=<AGE>    Filter gems updated within the last X (e.g. 2y, 1m, 4w, 10d)
+          --sort-by=<FIELD>                 Sort by field (name or date), defaults to name
+          --order=<DIRECTION>               Sort direction (asc or desc), defaults to asc
+          --json                            Output results as JSON
       HELP
 
     def initialize(argv = [])
@@ -40,7 +43,9 @@ module GemDating
         end
       end
 
-      $stdout << GemDating.from_file(@file_path, @options).table_print << "\n"
+      result = GemDating.from_file(@file_path, @options)
+      output = @options[:json] ? result.to_json : result.table_print
+      $stdout << output << "\n"
 
       SUCCESS
     end
@@ -50,9 +55,20 @@ module GemDating
     def parse_args(args = @args)
       options = {}
       options[:help] = true if (args & %w[-h --help -?]).any?
+      options[:json] = true if args.include?("--json")
+
       if (older_than = args.find { |arg| arg.start_with?("--older-than=", "--ot=") })
         options[:older_than] = older_than.split("=").last
       end
+
+      if (sort_by = args.find { |arg| arg.start_with?("--sort-by=") })
+        options[:sort_by] = sort_by.split("=").last
+      end
+
+      if (order = args.find { |arg| arg.start_with?("--order=") })
+        options[:order] = order.split("=").last
+      end
+
       options
     end
   end
