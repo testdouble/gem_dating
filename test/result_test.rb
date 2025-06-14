@@ -2,7 +2,6 @@ require "test_helper"
 require "date"
 
 class TestResult < Minitest::Test
-
   def build_mock_spec(name:, version:, date:)
     spec = Gem::Specification.new
     spec.name = name

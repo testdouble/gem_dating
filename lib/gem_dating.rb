@@ -15,7 +15,6 @@ module GemDating
     fetch_specs(gems, options)
   end
 
-
   def self.fetch_specs(gems, options)
     specs = Rubygems.fetch(gems)
     results = Result.new(specs)

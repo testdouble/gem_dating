@@ -23,7 +23,7 @@ module GemDating
     end
 
     def gem_line(line)
-      single_word_ruby_statements = %w{end else # gemspec}
+      single_word_ruby_statements = %w[end else # gemspec]
       return if single_word_ruby_statements.include? line.strip
 
       if line.start_with? "gem("

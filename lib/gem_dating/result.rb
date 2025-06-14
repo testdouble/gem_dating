@@ -31,7 +31,7 @@ module GemDating
     end
 
     def older_than(date)
-      specs.select! { |spec| spec.date.to_date < self.cut_off(date) }
+      specs.select! { |spec| spec.date.to_date < cut_off(date) }
       self
     end
 

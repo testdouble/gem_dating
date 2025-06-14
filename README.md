@@ -4,11 +4,6 @@
 
 The primary use case is when evaluating a codebase for upgrades - a gem from 2017 may effectively be abandoned and could cause trouble if you're targeting an upgrade to Ruby 4.1
 
-`gem_dating` avoids utilizing Bundler, and intends to be useful where you want to evaluate a set of gems without
-the overhead of a full bundle install. If you've got a valid bundle you should consider the built in
-[bundle-outdated](https://bundler.io/v2.4/man/bundle-outdated.1.html), or other available tools for interacting
-with your Gemfile, like [libyear-bundler](https://github.com/jaredbeck/libyear-bundler).
-
 ## Usage
 
 If you have rubygems 3.4.8 or later installed, you can skip installation and just run via `gem exec gem_dating [[path/to/Gemfile]`
@@ -22,22 +17,42 @@ If you have rubygems 3.4.8 or later installed, you can skip installation and jus
 gem 'gem_dating', group: [:development], require: false
 ```
 
-### Running GemDating
+### Command Line Options
 
-This gem provides a small command line interface. It may be invoked with:
+GemDating supports several command line options to customize its behavior:
 
-```bash
-$ gem_dating
+```
+gem_dating [OPTIONS] [<GEMFILE_FILEPATH>]
 ```
 
-By default, GemDating will look for a Gemfile in the current directory.
-If it finds one, it will output a list of gems and their relative ages to the stdout stream.
+#### Available Options:
 
-You may also pass a path to a Gemfile as an argument:
+- `--help`, `-h`, `-?`: Show the help message
+- `--older-than=<AGE>`, `--ot=<AGE>`: Filter gems updated within the last X time period
+  - Examples: `--older-than=2y` (2 years), `--ot=1m` (1 month), `--ot=4w` (4 weeks), `--ot=10d` (10 days)
+- `--sort-by=<FIELD>`: Sort by field
+  - Available fields: `name` or `date`
+  - Default: `name`
+- `--order=<DIRECTION>`: Sort direction
+  - Available directions: `asc` (ascending) or `desc` (descending)
+  - Default: `asc`
+- `--json`: Output results as JSON instead of table format
+
+#### Examples:
 
 ```bash
-$ gem_dating ~/code/my_app/Gemfile
-``` 
+# Show gems older than 1 year
+$ gem_dating --older-than=1y
+
+# Sort gems by date in descending order (newest first)
+$ gem_dating --sort-by=date --order=desc
+
+# Output results as JSON
+$ gem_dating --json
+
+# Combine multiple options
+$ gem_dating ~/code/my_app/Gemfile --older-than=6m --sort-by=date --order=desc
+```
 
 GemDating leans on `$stdout`, so you can pipe the output to a file if you'd like:
 ```bash
@@ -86,6 +101,16 @@ more_dating.table_print
 # ...etc
 ```
 
+### Caveats
+
+`gem_dating` avoids utilizing Bundler, and intends to be useful where you want to evaluate a set of gems without
+the overhead of a full bundle install. If you've got a valid bundle you should consider the built in
+[bundle-outdated](https://bundler.io/v2.4/man/bundle-outdated.1.html), or other available tools for interacting
+with your Gemfile, like [libyear-bundler](https://github.com/jaredbeck/libyear-bundler).
+
+Sometimes we [get incorrect dates](https://github.com/testdouble/gem_dating/issues/10). 
+TLDR; sometimes GemSpecs are built in an environment where the date gets overwritten. That'll be up to the gem
+owner(s) to determine if they'd like to adjust it to provide accurate dates.
 
 
 ## Code of Conduct
